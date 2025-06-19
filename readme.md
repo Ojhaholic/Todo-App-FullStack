@@ -20,7 +20,15 @@ Frontend:
 3. Use React Hot Toast for Prompts on screen
 ---------------------------------------------------------------------------------------------------------
 *my code is open to use
-# TO USE MY CODE, download the full project and just edit the .env files in backend and frontend.
+# TO USE MY CODE, download the full project and just create .env files in backend and frontend with envs as follows
+1. frontend:
+   VITE_API_URL= URL at which your Backend is hosted
+   
+3. backend:
+   PORT= your port number
+   MONGODB_URI= your MDB url
+   JWTsecretKey= your secret key
+   Frontend_URL= URL at which your frontend is hosted
 
 Happy Coding !
 original author : Devansh Ojha ;)
