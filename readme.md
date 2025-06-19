@@ -18,4 +18,9 @@ Frontend:
 1. used react-router-dom package for defining routes of different pages like home, login, etc.
 2. used axios for api handling in frontend
 3. Use React Hot Toast for Prompts on screen
+---------------------------------------------------------------------------------------------------------
+*my code is open to use
+# TO USE MY CODE, download the full project and just edit the .env files in backend and frontend.
 
+Happy Coding !
+original author : Devansh Ojha ;)
