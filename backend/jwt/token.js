@@ -8,10 +8,10 @@ export const generateTokenAndSaveInCookies = async (userId, res) => {
 
   res.cookie("jwt", token, {
     httpOnly: true,
-    secure: false,        
-    sameSite: "lax",      
+    secure: true,          
+    sameSite: "None",    
     path: "/",
-    maxAge: 2 * 24 * 60 * 60 * 1000  // ✅ 2 days in ms
+    maxAge: 2 * 24 * 60 * 60 * 1000 // 2 days
   });
 
   await usermodel.findByIdAndUpdate(userId, { token });

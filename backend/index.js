@@ -2,59 +2,53 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import express from "express";
-import mongoose, { mongo } from 'mongoose';
+import mongoose from 'mongoose';
 import TodoRouter from './routes/todo.route.js';
 import userRouter from './routes/user.route.js';
-import cors from "cors"
+import cors from "cors";
 import cookieParser from "cookie-parser";
-
-
 
 //consts
 const app = express();
 const PORT = process.env.PORT;
-const MDB_URI = process.env.MONGODB_URI
+const MDB_URI = process.env.MONGODB_URI;
 
-
-//adding ping of UptimeRobot to keep the backend active in free version of Render hosting
+// Ping endpoint to keep Render backend awake
 app.get("/ping", (req, res) => {
   res.send("pong");
 });
 
 //middlewares
 app.use(cookieParser());
-app.use(express.json())
+app.use(express.json());
+
 app.use(cors({
   origin: process.env.Frontend_URL,
-  credentials:true,
-  methods : "GET, POST, PUT, DELETE",
+  credentials: true,
+  methods: "GET, POST, PUT, DELETE",
   allowedHeaders: ["Content-Type", "Authorization"]
-}))
+}));
 
 //Database connection
 try {
-    await mongoose.connect(MDB_URI)
-    console.log("Database connected successfully !")
+  await mongoose.connect(MDB_URI);
+  console.log("✅ Database connected");
 } catch (error) {
-    console.error("Database connection Failed !", error)
+  console.error("Database connection failed", error);
 }
 
-//creating Server
-app.get("/", async(req, res)=>{
+//Default test route
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
 
-    res.send("hello world")
-})
-
-
-
-
-//Defining Routes
+//Routers
 app.use("/todo", TodoRouter);
 app.use("/user", userRouter);
 
-//Starting Server
+//Server start
 app.listen(PORT, () => {
-  console.log(`Server running on port: ${PORT}`);
+  console.log(` Server running on port: ${PORT}`);
 }).on('error', (err) => {
   console.error('Server failed to start:', err);
 });
