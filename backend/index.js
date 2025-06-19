@@ -15,6 +15,12 @@ const app = express();
 const PORT = process.env.PORT;
 const MDB_URI = process.env.MONGODB_URI
 
+
+//adding ping of UptimeRobot to keep the backend active in free version of Render hosting
+app.get("/ping", (req, res) => {
+  res.send("pong");
+});
+
 //middlewares
 app.use(cookieParser());
 app.use(express.json())
