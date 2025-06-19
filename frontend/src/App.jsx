@@ -1,53 +1,59 @@
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import Home from './components/Home.jsx'
-import Login from './components/Login.jsx'
-import Signup from './components/Signup.jsx'
-import PageNotFound from './components/PageNotFound.jsx'
-import { Toaster } from 'react-hot-toast'
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import Home from "./components/Home";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+import PageNotFound from "./components/PageNotFound";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("jwt"));
-  const location = useLocation();
   const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const location = useLocation();
 
-  // Re-check token on location change
   useEffect(() => {
     setToken(localStorage.getItem("jwt"));
   }, [location]);
 
-  // Handle PWA install prompt
   useEffect(() => {
     const handleBeforeInstallPrompt = (e) => {
-      e.preventDefault(); 
+      e.preventDefault();
       setDeferredPrompt(e);
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-
     return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
   }, []);
 
-  // Automatically show install prompt after short delay
-  useEffect(() => {
+  const handleInstallClick = async () => {
     if (deferredPrompt) {
-      setTimeout(() => {
-        deferredPrompt.prompt();
-      }, 1500);
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === "accepted") {
+        console.log("User accepted the install prompt");
+      }
+      setDeferredPrompt(null);
     }
-  }, [deferredPrompt]);
+  };
 
   return (
     <>
       <Routes>
-        <Route path='/' element={token ? <Home /> : <Navigate to="/login" />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/signup' element={<Signup />} />
-        <Route path='*' element={<PageNotFound />} />
+        <Route path="/" element={token ? <Home /> : <Navigate to="/login" />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
+
+      {/* Install Prompt Button */}
+      {deferredPrompt && (
+        <div style={{ position: "fixed", bottom: 10, right: 10 }}>
+          <button onClick={handleInstallClick}>Install App</button>
+        </div>
+      )}
       <Toaster />
     </>
-  )
+  );
 }
 
 export default App;
